@@ -37,6 +37,7 @@ async function waitForVSCodeLoad(page: Page): Promise<void> {
  */
 async function openCommandPalette(page: Page): Promise<void> {
   // Detect platform to use appropriate modifier key
+  // macOS uses Meta (Command key), Windows and Linux use Control
   const platform = process.platform;
   const modifier = platform === 'darwin' ? 'Meta' : 'Control';
   
