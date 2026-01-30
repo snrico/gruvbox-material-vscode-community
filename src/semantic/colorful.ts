@@ -32,6 +32,15 @@ export function getColorfulSemantic(palette: Palette) {
     "variable.defaultLibrary:typescriptreact": `${palette.purple}`,
     "property.defaultLibrary:typescriptreact": `${palette.purple}`,
     // }}}
+    // Python {{{
+    // Fixes #269: Python self/cls parameter coloring
+    "selfParameter:python": `${palette.purple}`,
+    // }}}
+    // Rust {{{
+    // Ported from upstream PR #270: Rust enum semantic colors
+    "enum:rust": `${palette.purple}`,
+    "enumMember:rust": `${palette.yellow}`,
+    // }}}
   };
 }
 

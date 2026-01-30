@@ -645,6 +645,15 @@ export function getDefaultSyntax(palette: Palette, italicComments: boolean) {
       },
     },
     {
+      // Fixes #264: Ensure JSX text content uses consistent foreground color
+      // regardless of whether it's in a regular function or arrow function
+      name: "JSX text content",
+      scope: "meta.jsx.children, meta.jsx.children.js, meta.jsx.children.tsx",
+      settings: {
+        foreground: palette.fg,
+      },
+    },
+    {
       name: "JSX green",
       scope:
         "punctuation.definition.tag.jsx, entity.other.attribute-name.jsx, punctuation.definition.tag.begin.js.jsx, punctuation.definition.tag.end.js.jsx, entity.other.attribute-name.js.jsx",

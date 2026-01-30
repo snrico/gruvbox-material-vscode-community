@@ -9,7 +9,7 @@ import { Palette, Configuration } from "../interface";
 export function flatWorkbench(
   palette: Palette,
   configuration: Configuration,
-  variant: string
+  variant: string,
 ) {
   let selectionBg: string;
   let editorSelectionBg: string;
@@ -373,7 +373,17 @@ export function flatWorkbench(
     "editorLink.activeForeground": `${palette.green}`,
     "editorWhitespace.foreground": `${palette.bg5}`,
     "editorIndentGuide.background": `${palette.grey2}20`,
-    "editorIndentGuide.activeBackground": `${palette.grey2}50`,
+    // Fixes #267: Decrease active indent guide opacity from 50% to 30%
+    "editorIndentGuide.activeBackground": `${palette.grey2}30`,
+    "editorIndentGuide.activeBackground1": `${palette.grey2}30`,
+    "editorIndentGuide.activeBackground2": `${palette.grey2}30`,
+    "editorIndentGuide.activeBackground3": `${palette.grey2}30`,
+    "editorIndentGuide.activeBackground4": `${palette.grey2}30`,
+    "editorIndentGuide.activeBackground5": `${palette.grey2}30`,
+    "editorIndentGuide.activeBackground6": `${palette.grey2}30`,
+    // Fixes #265: Add debug inline variable highlights
+    "editor.inlineValuesBackground": `${palette.bg5}40`,
+    "editor.inlineValuesForeground": `${palette.grey1}`,
     "editorInlayHint.background": `${palette.bg}00`,
     "editorInlayHint.foreground": `${palette.bg9}`,
     "editorInlayHint.typeBackground": `${palette.bg}00`,
