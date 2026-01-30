@@ -41,7 +41,7 @@ async function openCommandPalette(page: Page): Promise<void> {
   const modifier = platform === 'darwin' ? 'Meta' : 'Control';
   
   // Use platform-appropriate shortcut for command palette
-  await page.keyboard.press(`${modifier}+Shift+KeyP`);
+  await page.keyboard.press(`${modifier}+Shift+P`);
   await page.waitForSelector('.quick-input-widget', { state: 'visible' });
 }
 
