@@ -32,10 +32,17 @@ async function waitForVSCodeLoad(page: Page): Promise<void> {
 
 /**
  * Opens the command palette in VS Code web.
- * Uses F1 keyboard shortcut and waits for the quick input widget to appear.
+ * Uses the platform-appropriate keyboard shortcut (Control+Shift+P on Linux/Windows,
+ * Meta+Shift+P on macOS) instead of F1 to avoid browser-level shortcut conflicts.
  */
 async function openCommandPalette(page: Page): Promise<void> {
-  await page.keyboard.press('F1');
+  // Detect platform to use appropriate modifier key
+  // macOS uses Meta (Command key), Windows and Linux use Control
+  const platform = process.platform;
+  const modifier = platform === 'darwin' ? 'Meta' : 'Control';
+  
+  // Use platform-appropriate shortcut for command palette
+  await page.keyboard.press(`${modifier}+Shift+P`);
   await page.waitForSelector('.quick-input-widget', { state: 'visible' });
 }
 
