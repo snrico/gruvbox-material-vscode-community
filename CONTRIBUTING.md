@@ -10,8 +10,8 @@ Make sure you have the following programs installed:
 First, clone the repository and install dependencies:
 
 ```shell
-$ git clone --depth 1 https://github.com/snrico/gruvbox-material-vscode.git
-$ cd gruvbox-material-vscode
+$ git clone --depth 1 https://github.com/snrico/gruvbox-material-vscode-community.git
+$ cd gruvbox-material-vscode-community
 $ npm ci
 ```
 
