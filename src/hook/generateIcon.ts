@@ -4,7 +4,7 @@
  *  License:    MIT
  *--------------------------------------------------------------------------------------------*/
 
-import * as sharp from "sharp";
+import sharp from "sharp";
 import { join } from "path";
 
 const svgPath = join(__dirname, "..", "..", "icon.svg");
