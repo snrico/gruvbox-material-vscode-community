@@ -26,9 +26,12 @@
     "intrinsic:python": "#945e80",
     "module:python": "#45707a",
     "class:python": "#4c7a5d",
+    "selfParameter:python": "#945e80",
     "macro:rust": "#4c7a5d",
     "namespace:rust": "#945e80",
-    "selfKeyword:rust": "#945e80"
+    "selfKeyword:rust": "#945e80",
+    "enum:rust": "#945e80",
+    "enumMember:rust": "#45707a"
   },
   "colors": {
     "foreground": "#7c6f64",
@@ -152,7 +155,15 @@
     "editorLink.activeForeground": "#6c782e",
     "editorWhitespace.foreground": "#e0cfa9",
     "editorIndentGuide.background": "#7c6f6420",
-    "editorIndentGuide.activeBackground": "#7c6f6450",
+    "editorIndentGuide.activeBackground": "#7c6f6430",
+    "editorIndentGuide.activeBackground1": "#7c6f6430",
+    "editorIndentGuide.activeBackground2": "#7c6f6430",
+    "editorIndentGuide.activeBackground3": "#7c6f6430",
+    "editorIndentGuide.activeBackground4": "#7c6f6430",
+    "editorIndentGuide.activeBackground5": "#7c6f6430",
+    "editorIndentGuide.activeBackground6": "#7c6f6430",
+    "editor.inlineValuesBackground": "#e0cfa940",
+    "editor.inlineValuesForeground": "#928374",
     "editorInlayHint.background": "#fbf1c700",
     "editorInlayHint.foreground": "#a89984",
     "editorInlayHint.typeBackground": "#fbf1c700",
@@ -1058,6 +1069,13 @@
     {
       "name": "JSX white",
       "scope": "JSXNested",
+      "settings": {
+        "foreground": "#654735"
+      }
+    },
+    {
+      "name": "JSX text content",
+      "scope": "meta.jsx.children, meta.jsx.children.js, meta.jsx.children.tsx",
       "settings": {
         "foreground": "#654735"
       }
