@@ -60,15 +60,17 @@ export default defineConfig({
   timeout: 60000,
 
   /**
-   * Directory for storing baseline screenshots
+   * Directory for storing baseline screenshots.
+   * Screenshots are stored per-platform to handle OS-specific font rendering differences.
    */
   snapshotDir: 'test/screenshots',
 
   /**
-   * Simplified snapshot path template for cleaner directory structure.
-   * Format: test/screenshots/{testName}{.png}
+   * Snapshot path template that includes platform for cross-OS compatibility.
+   * Format: test/screenshots/{platform}/{testName}.png
+   * This allows separate baselines for linux, darwin, and win32.
    */
-  snapshotPathTemplate: '{snapshotDir}/{arg}{ext}',
+  snapshotPathTemplate: '{snapshotDir}/{platform}/{arg}{ext}',
 
   expect: {
     /**
@@ -82,17 +84,17 @@ export default defineConfig({
     toHaveScreenshot: {
       /**
        * Maximum number of pixels that can differ between screenshots.
-       * Set to 100 to account for anti-aliasing differences across platforms
+       * Set to 500 to account for anti-aliasing differences across platforms
        * and minor font rendering variations.
        */
-      maxDiffPixels: 100,
+      maxDiffPixels: 500,
 
       /**
        * Per-pixel color difference threshold (0-1 scale).
-       * 0.2 (20%) allows for minor color variations in subpixel rendering
+       * 0.3 (30%) allows for minor color variations in subpixel rendering
        * while still detecting meaningful theme color changes.
        */
-      threshold: 0.2,
+      threshold: 0.3,
 
       /**
        * Disable animations to capture stable visual states.

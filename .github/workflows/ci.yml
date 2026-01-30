@@ -2,6 +2,12 @@ name: CI
 
 on:
   workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: 'Update visual regression snapshots'
+        required: false
+        default: 'false'
+        type: boolean
   push:
     branches:
       - master
@@ -58,12 +64,23 @@ jobs:
         run: npm ci
 
       - name: Run unit tests
-        run: npm run test:unit
+        run: xvfb-run -a npm run test:unit
 
   visual-tests:
-    name: Visual Regression Tests
-    runs-on: ubuntu-latest
+    name: Visual Tests (${{ matrix.os }})
     needs: lint-and-build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: windows-latest
+            platform: win32
+          - os: macos-latest
+            platform: darwin
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Check out ref
@@ -83,19 +100,75 @@ jobs:
 
       - name: Run visual regression tests
         run: npm run test:visual
+        if: inputs.update_snapshots != 'true'
+
+      - name: Update visual regression snapshots
+        run: npm run test:visual:update
+        if: inputs.update_snapshots == 'true'
+
+      - name: Upload updated snapshots
+        if: inputs.update_snapshots == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshots-${{ matrix.platform }}
+          path: test/screenshots/${{ matrix.platform }}/
+          retention-days: 1
 
       - name: Upload visual diff artifacts
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: visual-test-diffs
+          name: visual-test-diffs-${{ matrix.platform }}
           path: test-results/
           retention-days: 7
 
       - name: Upload Playwright report
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.platform }}
           path: playwright-report/
           retention-days: 7
+
+  # Separate job to commit snapshots after all platforms complete
+  commit-snapshots:
+    name: Commit Updated Snapshots
+    needs: visual-tests
+    if: inputs.update_snapshots == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out ref
+        uses: actions/checkout@v4
+
+      - name: Download all snapshot artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: snapshots-*
+          path: test/screenshots/
+          merge-multiple: false
+
+      - name: Move snapshots to correct directories
+        run: |
+          # Artifacts are downloaded as snapshots-{platform}/{files}
+          # Move them to {platform}/{files}
+          for dir in test/screenshots/snapshots-*/; do
+            platform=$(basename "$dir" | sed 's/snapshots-//')
+            mkdir -p "test/screenshots/$platform"
+            mv "$dir"* "test/screenshots/$platform/" 2>/dev/null || true
+            rmdir "$dir" 2>/dev/null || true
+          done
+          
+          # Show what we have
+          echo "Updated snapshots:"
+          find test/screenshots -name "*.png" -type f
+
+      - name: Commit and push snapshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add test/screenshots/
+          git diff --staged --quiet || git commit -m "chore: update visual regression snapshots [skip ci]"
+          git push
