@@ -1,0 +1,103 @@
+name: Check Upstream Palette
+
+on:
+  schedule:
+    # Run monthly on the 1st at 9:00 UTC
+    - cron: '0 9 1 * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch upstream palette
+        run: |
+          echo "Fetching upstream gruvbox-material palette..."
+          curl -s https://raw.githubusercontent.com/sainnhe/gruvbox-material/master/autoload/gruvbox_material.vim > /tmp/upstream.vim
+          echo "✅ Fetched upstream palette"
+
+      - name: Check for recent upstream releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "=== Recent Upstream Releases ==="
+          echo ""
+          gh api repos/sainnhe/gruvbox-material/releases --jq '.[0:5] | .[] | "  \(.tag_name) - \(.published_at | split("T")[0])"' || echo "  No releases found or API error"
+          echo ""
+
+      - name: Extract upstream accent colors
+        run: |
+          echo "=== Upstream Dark Material Accent Colors ==="
+          echo ""
+          # Extract the dark material foreground section (between 'material' and first 'else')
+          sed -n "/if a:foreground ==# 'material'/,/else/p" /tmp/upstream.vim | \
+            grep -E "'(red|orange|yellow|green|aqua|blue|purple)':" | \
+            sed "s/.*'\([^']*\)':[^']*\['\([^']*\)'.*/  \1: \2/" | head -7
+          echo ""
+
+      - name: Compare with local palette
+        run: |
+          echo "=== Local Dark Material Accent Colors ==="
+          echo ""
+          grep -E '^\s*(red|orange|yellow|green|aqua|blue|purple):' src/palette/dark/foreground/material.ts | \
+            sed 's/[",]//g' | sed 's/^\s*/  /'
+          echo ""
+
+      - name: Verify accent color sync
+        id: verify
+        run: |
+          echo "=== Accent Color Verification ==="
+          echo ""
+
+          # Extract upstream colors (dark material section)
+          sed -n "/if a:foreground ==# 'material'/,/else/p" /tmp/upstream.vim | \
+            grep -E "'(red|orange|yellow|green|aqua|blue|purple)':" | \
+            sed "s/.*'\([^']*\)':[^']*\['\([^']*\)'.*/\1:\2/" | sort > /tmp/upstream-colors.txt
+
+          # Extract local colors (normalize format to match upstream)
+          grep -E '^\s*(red|orange|yellow|green|aqua|blue|purple):' src/palette/dark/foreground/material.ts | \
+            sed -E 's/^[[:space:]]*//; s/[",]//g; s/:[[:space:]]*/:/' | sort > /tmp/local-colors.txt
+
+          # Compare
+          if diff -q /tmp/upstream-colors.txt /tmp/local-colors.txt > /dev/null 2>&1; then
+            echo "✅ All accent colors match upstream!"
+            echo "sync_status=synced" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Accent color differences detected:"
+            echo ""
+            diff /tmp/upstream-colors.txt /tmp/local-colors.txt || true
+            echo "sync_status=differs" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check grey colors
+        run: |
+          echo ""
+          echo "=== Grey Color Verification ==="
+          echo ""
+          
+          # Extract upstream grey colors (dark variant)
+          echo "Upstream grey colors:"
+          grep -E "^\s*\\\s*'grey[012]':" /tmp/upstream.vim | head -3 | \
+            sed "s/.*'\([^']*\)'.*\['\([^']*\)'.*/  \1: \2/"
+          
+          echo ""
+          echo "Local grey colors (dark/background/medium.ts):"
+          grep -E '^\s*grey[012]:' src/palette/dark/background/medium.ts | \
+            sed 's/.*\(grey[012]\):\s*"\([^"]*\)".*/  \1: \2/'
+
+      - name: Summary
+        run: |
+          echo ""
+          echo "=========================================="
+          echo "  UPSTREAM PALETTE CHECK COMPLETE"
+          echo "=========================================="
+          echo ""
+          echo "Upstream repo: https://github.com/sainnhe/gruvbox-material"
+          echo "Palette file:  autoload/gruvbox_material.vim"
+          echo ""
+          echo "For detailed sync instructions, see MAINTENANCE.md"
+          echo ""
+
