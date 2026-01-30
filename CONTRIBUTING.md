@@ -2,22 +2,47 @@
 
 Make sure you have the following programs installed:
 
-1. [git](git-scm.com/)
-2. [nodejs && npm](https://nodejs.org/en/download/)
+1. [git](https://git-scm.com/)
+2. [Node.js 20+](https://nodejs.org/en/download/) (includes npm)
 
-## Start
+## Getting Started
 
-First of all, let's try to package this extension and install it to your vscode.
+First, clone the repository and install dependencies:
 
 ```shell
-$ git clone --depth 1 https://github.com/sainnhe/gruvbox-material-vscode.git
+$ git clone --depth 1 https://github.com/snrico/gruvbox-material-vscode.git
 $ cd gruvbox-material-vscode
 $ npm ci
+```
+
+### Build and Test Locally
+
+```shell
+# Run linting
+$ npm run lint
+
+# Run unit tests (97 tests)
+$ npm run test:unit
+
+# Run visual regression tests (9 tests)
+$ npm run test:visual
+
+# Run all tests
+$ npm run test:all
+
+# Build and package the extension
 $ npm run package
+
+# Install the packaged extension
 $ code --install-extension ./gruvbox-material-*.vsix
 ```
 
-Now, use vscode to open this project and modify some code, then press `F5` to start debugging.
+### Development Workflow
+
+1. Open this project in VS Code
+2. Make your changes to the TypeScript code in `src/`
+3. Press `F5` to launch the Extension Development Host
+4. Test your changes visually in the new VS Code window
 
 ## The theme files
 
@@ -35,33 +60,82 @@ To get current token of syntax highlighting or semantic highlighting, press `Ctr
 
 In this extension, the json files will be automatically generated when user configuration changes, so don't keep your changes in the json files, but modify the typescript code instead.
 
+## Testing
+
+This project has a comprehensive testing suite. **All tests must pass before submitting a PR.**
+
+### Test Structure
+
+```
+src/test/
+├── helpers/           # Shared test utilities
+│   ├── constants.ts   # Theme names, paths, configuration options
+│   ├── fixtures.ts    # Test data factory functions
+│   └── theme-validator.ts  # Theme JSON validation utilities
+├── unit/              # Unit tests (run with @vscode/test-electron)
+│   ├── theme-json.test.ts    # Theme JSON structure validation
+│   ├── configuration.test.ts # Configuration option testing
+│   └── palette.test.ts       # Palette generation testing
+└── visual/            # Visual regression tests (run with Playwright)
+    └── theme-visual.spec.ts  # Screenshot comparison tests
+
+test/screenshots/      # Baseline screenshots for visual regression
+```
+
+### Running Tests
+
+```shell
+# Run unit tests (97 tests)
+$ npm run test:unit
+
+# Run visual regression tests (9 tests)
+$ npm run test:visual
+
+# Run all tests
+$ npm run test:all
+```
+
+### Updating Visual Baselines
+
+If you intentionally change theme colors, update the baseline screenshots:
+
+```shell
+$ npm run test:visual:update
+```
+
+Review the updated screenshots in `test/screenshots/` before committing.
+
 ## Publishing
 
-I set up a github action for this repository that can publish this extension to vscode marketplace and open vsx registry automatically when a new tag is created. For example, to release `v6.2.10`, do something like this:
+GitHub Actions automatically publishes to VS Code Marketplace and Open VSX Registry when a version tag is pushed.
 
-1. Edit `package.json`, modify the `version` field: `"version": "6.2.10",`
-2. Update `package-lock.json`: `$ npm install`
-3. Commit this change: `$ git commit -am "release v6.2.10"`
-4. Create a tag: `$ git tag -a v6.2.10` and edit the tag message based on CHANGELOG.md
+**Quick Release (recommended):**
 
+```shell
+# For bug fixes, security updates, dependency updates
+$ npm run release:patch
+
+# For new features, palette updates
+$ npm run release:minor
+
+# For breaking changes or major redesigns
+$ npm run release:major
 ```
-v6.2.10
 
-- Publish to open vsx registry.
-- Setup a pre-commit hook that can regenerate the theme file using default settings.
-```
+These scripts automatically bump the version, create a commit, tag, and push.
 
-4. Push the commit and tag to github: `$ git push origin master v6.2.10`
+**Manual Release:**
+
+1. Bump version: `npm version patch` (or `minor`/`major`)
+2. Push with tags: `git push origin master --tags`
 
 ### Versioning
-
-This color scheme doesn't follow the semantic versioning convention, because there are almost no "bugs" in a color scheme. Everything is regarded as a feature.
 
 Given a `MAJOR.MINOR.PATCH`, increment the:
 
 1. `MAJOR` version when you make breaking changes (often with changes to design),
-2. `MINOR` version when you change configuration options, and
-3. `PATCH` version when you add small features (with no configuration changes).
+2. `MINOR` version when you change configuration options or add features,
+3. `PATCH` version when you fix bugs or update dependencies.
 
 ## Some designs
 
