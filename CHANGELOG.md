@@ -2,6 +2,29 @@
 
 All notable changes to the "gruvbox-material" extension will be documented in this file.
 
+## 6.6.0
+
+This release marks the beginning of community maintenance after the original extension was deprecated.
+
+### Security
+- Fixed all 26 security vulnerabilities in dependencies
+
+### Updated
+- Updated all GitHub Actions to v4
+- Updated Node.js from 16 to 20 (LTS)
+- Updated TypeScript from 4.9 to 5.9
+- Updated ESLint from 8 to 9 (with new flat config format)
+- Updated Sharp from 0.31 to 0.34
+- Updated @vscode/vsce from 2.15 to 3.7
+- Updated Prettier from 2 to 3
+- Updated Husky from 8 to 9
+- Updated all other dependencies to latest versions
+
+### Changed
+- Migrated ESLint configuration to new flat config format (`eslint.config.mjs`)
+- Updated TypeScript target to ES2020
+- Added npm caching to GitHub Actions workflows
+
 ## 6.5.2
 
 - Change `activationEvents`.
