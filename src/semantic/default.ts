@@ -42,11 +42,16 @@ export function getDefaultSemantic(palette: Palette) {
     "intrinsic:python": `${palette.purple}`,
     "module:python": `${palette.blue}`,
     "class:python": `${palette.aqua}`,
+    // Fixes #269: Python self/cls parameter coloring
+    "selfParameter:python": `${palette.purple}`,
     // }}}
     // Rust {{{
     "macro:rust": `${palette.aqua}`,
     "namespace:rust": `${palette.purple}`,
     "selfKeyword:rust": `${palette.purple}`,
+    // Ported from upstream PR #270: Rust enum semantic colors
+    "enum:rust": `${palette.purple}`,
+    "enumMember:rust": `${palette.blue}`,
     // }}}
   };
 }
