@@ -72,13 +72,17 @@ jobs:
         run: npm run compile
 
       - name: Package extension
-        run: npx vsce package
+        id: package
+        run: |
+          npx vsce package
+          VSIX_FILE=$(ls *.vsix)
+          echo "vsix_file=$VSIX_FILE" >> $GITHUB_OUTPUT
 
       - name: Publish to Visual Studio Marketplace
-        run: npx vsce publish -p ${{ secrets.VS_MARKETPLACE_TOKEN }}
+        run: npx vsce publish --packagePath ${{ steps.package.outputs.vsix_file }} -p ${{ secrets.VS_MARKETPLACE_TOKEN }}
 
       - name: Publish to Open VSX Registry
-        run: npx ovsx publish *.vsix -p ${{ secrets.OPEN_VSX_TOKEN }}
+        run: npx ovsx publish ${{ steps.package.outputs.vsix_file }} -p ${{ secrets.OPEN_VSX_TOKEN }}
 
       - name: Generate release notes from changelog
         id: release_notes
