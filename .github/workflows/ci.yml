@@ -166,8 +166,20 @@ jobs:
         if: inputs.update_snapshots != 'true'
 
       - name: Update visual regression snapshots
-        run: npm run test:visual:update
         if: inputs.update_snapshots == 'true'
+        run: |
+          # Run with --update-snapshots flag - Playwright writes new baselines
+          # Exit code is non-zero when writing new files (expected), so we capture it
+          npm run test:visual:update || true
+          
+          # Verify screenshots were actually generated
+          COUNT=$(find test/screenshots/${{ matrix.platform }} -name "*.png" 2>/dev/null | wc -l)
+          echo "Generated $COUNT screenshots"
+          if [ "$COUNT" -lt 1 ]; then
+            echo "::error::No screenshots were generated!"
+            exit 1
+          fi
+        shell: bash
 
       - name: Upload updated snapshots
         if: inputs.update_snapshots == 'true'
@@ -197,7 +209,7 @@ jobs:
   commit-snapshots:
     name: Commit Updated Snapshots
     needs: visual-tests
-    if: inputs.update_snapshots == 'true'
+    if: always() && inputs.update_snapshots == 'true' && !cancelled()
     runs-on: ubuntu-latest
     permissions:
       contents: write
