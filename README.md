@@ -1,5 +1,5 @@
-> [!IMPORTANT]  
-> Since vscode is not my daily editor and lack of time, this repo is no longer maintained. Welcome to fork this repo and publish a new extension to marketplace.
+> **Community Maintained Fork**
+> This is an actively maintained fork of the original Gruvbox Material VS Code extension, which was deprecated by the original author. We keep it updated with security fixes, dependency updates, and VS Code compatibility.
 
 ---
 
@@ -44,15 +44,15 @@
 ![light-soft-high-contrast](https://gitlab.com/sainnhe/img/-/raw/master/gm-vsc-light-soft-high-contrast.png)
 
 <p align="center">
-    <a href="https://marketplace.visualstudio.com/items?itemName=sainnhe.gruvbox-material" alt="Marketplace">
+    <a href="https://marketplace.visualstudio.com/items?itemName=snrico.gruvbox-material" alt="Marketplace">
         <img src="https://img.shields.io/badge/vscode-marketplace-blue" /></a>
-    <a href="https://open-vsx.org/extension/sainnhe/gruvbox-material" alt="Registry">
+    <a href="https://open-vsx.org/extension/snrico/gruvbox-material" alt="Registry">
         <img src="https://img.shields.io/badge/open--vsx-registry-green" /></a>
-    <a href="https://github.com/sainnhe/gruvbox-material-vscode" alt="Repository">
+    <a href="https://github.com/snrico/gruvbox-material-vscode-community" alt="Repository">
         <img src="https://img.shields.io/badge/github-repository-blueviolet" /></a>
-    <a href="https://github.com/sainnhe/gruvbox-material-vscode/issues" alt="Issues">
+    <a href="https://github.com/snrico/gruvbox-material-vscode-community/issues" alt="Issues">
         <img src="https://img.shields.io/badge/issue-feedback-red" /></a>
-    <a href="https://vscode.dev/theme/sainnhe.gruvbox-material" alt="Preview">
+    <a href="https://vscode.dev/theme/snrico.gruvbox-material" alt="Preview">
         <img src="https://img.shields.io/badge/preview-vscode.dev-yellow" /></a>
 </p>
 
@@ -143,7 +143,7 @@ The following file types and syntax extensions are basically optimized, but ther
 ## Installation
 
 1. Press extensions icon in your editor.
-2. Search for `sainnhe.gruvbox-material`.
+2. Search for `snrico.gruvbox-material`.
 3. Select this extension and press `install` button.
 
 ## Usage
@@ -180,9 +180,22 @@ See this [wiki page](https://github.com/sainnhe/gruvbox-material/wiki/Related-Pr
 - [Edge](https://github.com/sainnhe/edge-vscode)
 - [Sonokai](https://github.com/sainnhe/sonokai-vscode)
 
+## Development & Testing
+
+This project includes a comprehensive testing suite:
+
+```bash
+npm run lint          # Run ESLint
+npm run test:unit     # Run 97 unit tests
+npm run test:visual   # Run 9 visual regression tests
+npm run test:all      # Run all tests
+```
+
+See [MAINTENANCE.md](https://github.com/snrico/gruvbox-material-vscode-community/blob/master/MAINTENANCE.md) for detailed testing and maintenance documentation.
+
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/sainnhe/gruvbox-material-vscode/blob/master/CONTRIBUTING.md).
+See [CONTRIBUTING.md](https://github.com/snrico/gruvbox-material-vscode-community/blob/master/CONTRIBUTING.md).
 
 ## Credits
 
@@ -205,10 +218,13 @@ See [CONTRIBUTING.md](https://github.com/sainnhe/gruvbox-material-vscode/blob/ma
 
 ## Maintainers
 
-| [![Sainnhe Park](https://avatars1.githubusercontent.com/u/37491630?s=70&u=14e72916dcf467f393c532536387ec72a23747ec&v=4)](https://github.com/sainnhe) | [![Zolkin Andrew](https://avatars2.githubusercontent.com/u/58516282?s=70&u=87954a1cdbb355162ecbd9826b6b85525f498240&v=4)](https://github.com/Z4RX) |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Sainnhe Park](https://github.com/sainnhe)                                                                                                           | [Zolkin Andrew](https://github.com/Z4RX)                                                                                                           |
+**Current Maintainer:**
+- [snrico](https://github.com/snrico) (Community Fork)
+
+**Original Authors:**
+- [Sainnhe Park](https://github.com/sainnhe) - Original creator
+- [Zolkin Andrew](https://github.com/Z4RX) - Original contributor
 
 ## License
 
-[MIT License](https://github.com/sainnhe/gruvbox-material-vscode/blob/master/LICENSE)
+[MIT License](https://github.com/snrico/gruvbox-material-vscode-community/blob/master/LICENSE)

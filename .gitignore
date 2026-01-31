@@ -10,3 +10,13 @@ dist/
 .flag
 icon.png
 .vscode-test-web
+.vscode-test/
+
+# Playwright test artifacts
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Keep baseline screenshots (do NOT ignore)
+!test/screenshots/*.png
+.DS_Store

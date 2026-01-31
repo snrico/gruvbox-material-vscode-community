@@ -1,13 +1,13 @@
 {
   "name": "gruvbox-material",
   "displayName": "Gruvbox Material",
-  "description": "Gruvbox with Material Palette",
-  "author": "sainnhe (https://github.com/sainnhe)",
-  "publisher": "sainnhe",
-  "version": "6.5.2",
-  "homepage": "https://github.com/sainnhe/gruvbox-material-vscode",
+  "description": "Gruvbox with Material Palette - Community maintained fork",
+  "author": "snrico (https://github.com/snrico)",
+  "publisher": "snrico",
+  "version": "6.6.0",
+  "homepage": "https://github.com/snrico/gruvbox-material-vscode-community",
   "bugs": {
-    "url": "https://github.com/sainnhe/gruvbox-material-vscode/issues"
+    "url": "https://github.com/snrico/gruvbox-material-vscode-community/issues"
   },
   "icon": "icon.png",
   "license": "MIT",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sainnhe/gruvbox-material-vscode.git"
+    "url": "https://github.com/snrico/gruvbox-material-vscode-community.git"
   },
   "extensionKind": [
     "ui",
@@ -230,9 +230,17 @@
     "compile:icon": "node dist/hook/generateIcon.js",
     "compile": "npm run clean && npm run compile:ts && npm run compile:themes && npm run compile:icon",
     "package": "vsce package && git checkout -- themes",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint src/",
     "browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "npm run test:unit",
+    "test:unit": "npm run compile && vscode-test",
+    "test:visual": "npm run compile && playwright test",
+    "test:visual:update": "npm run compile && playwright test --update-snapshots",
+    "test:all": "npm run test:unit && npm run test:visual",
+    "release:patch": "npm version patch && git push origin master --tags",
+    "release:minor": "npm version minor && git push origin master --tags",
+    "release:major": "npm version major && git push origin master --tags"
   },
   "lint-staged": {
     "*.ts": "eslint --fix",
@@ -242,21 +250,27 @@
     "vscode": "^1.55.0"
   },
   "devDependencies": {
-    "@types/node": "18.11.14",
-    "@types/sharp": "0.31.0",
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.39.2",
+    "@playwright/test": "^1.58.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.19.30",
     "@types/vscode": "1.55.0",
-    "@typescript-eslint/eslint-plugin": "5.46.1",
-    "@typescript-eslint/parser": "5.46.1",
-    "@vscode/test-web": "0.0.33",
-    "@vscode/vsce": "^2.15.0",
-    "eslint": "8.29.0",
-    "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-prettier": "4.2.1",
-    "husky": "8.0.2",
-    "lint-staged": "13.1.0",
-    "prettier": "2.8.1",
-    "rimraf": "3.0.2",
-    "sharp": "0.31.2",
-    "typescript": "4.9.4"
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/test-web": "^0.0.78",
+    "@vscode/vsce": "^3.7.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "mocha": "^11.7.5",
+    "prettier": "^3.8.1",
+    "rimraf": "^6.1.2",
+    "sharp": "^0.34.5",
+    "typescript": "^5.9.3"
   }
 }
