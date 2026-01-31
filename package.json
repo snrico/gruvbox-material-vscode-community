@@ -3,7 +3,7 @@
   "displayName": "Gruvbox Material",
   "description": "Gruvbox with Material Palette - Community maintained fork",
   "author": "snrico (https://github.com/snrico)",
-  "publisher": "snrico",
+  "publisher": "snrico-moonlight",
   "version": "6.6.0",
   "homepage": "https://github.com/snrico/gruvbox-material-vscode-community",
   "bugs": {
@@ -268,6 +268,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "mocha": "^11.7.5",
+    "ovsx": "^0.10.8",
     "prettier": "^3.8.1",
     "rimraf": "^6.1.2",
     "sharp": "^0.34.5",

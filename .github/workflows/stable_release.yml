@@ -2,24 +2,71 @@ name: Stable Release
 
 on:
   workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
   push:
     tags:
       - "v*"
 
 jobs:
-  deploy:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out ref
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-node@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
-      - run: npm ci
+      - name: Install node modules
+        run: npm ci
+
+      - name: Configure git
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version and create tag
+        if: github.event_name == 'workflow_dispatch'
+        id: version
+        run: |
+          npm version ${{ inputs.version_bump }} -m "chore: release v%s"
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          git push origin HEAD:master --follow-tags
+
+      - name: Get version from tag
+        if: github.event_name == 'push'
+        id: tag_version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set version output
+        id: final_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ steps.version.outputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${{ steps.tag_version.outputs.version }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Build extension
         run: npm run compile
@@ -27,21 +74,41 @@ jobs:
       - name: Package extension
         run: npx vsce package
 
-      - name: Publish to Open VSX Registry
-        uses: HaaLeo/publish-vscode-extension@v1
-        with:
-          pat: ${{ secrets.OPEN_VSX_TOKEN }}
-
       - name: Publish to Visual Studio Marketplace
-        uses: HaaLeo/publish-vscode-extension@v1
-        with:
-          pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-          registryUrl: https://marketplace.visualstudio.com
+        run: npx vsce publish -p ${{ secrets.VS_MARKETPLACE_TOKEN }}
+
+      - name: Publish to Open VSX Registry
+        run: npx ovsx publish *.vsix -p ${{ secrets.OPEN_VSX_TOKEN }}
+
+      - name: Generate release notes from changelog
+        id: release_notes
+        run: |
+          # Extract notes for current version from CHANGELOG.md
+          VERSION="${{ steps.final_version.outputs.version }}"
+          
+          # Get content between current version header and next version header
+          NOTES=$(awk "/^## $VERSION/,/^## [0-9]/" CHANGELOG.md | sed '1d;$d')
+          
+          # If no specific notes found, use auto-generated
+          if [ -z "$NOTES" ]; then
+            echo "No changelog entry found for v$VERSION, using auto-generated notes"
+            echo "use_auto=true" >> $GITHUB_OUTPUT
+          else
+            # Escape for GitHub Actions
+            NOTES="${NOTES//'%'/'%25'}"
+            NOTES="${NOTES//$'\n'/'%0A'}"
+            NOTES="${NOTES//$'\r'/'%0D'}"
+            echo "notes=$NOTES" >> $GITHUB_OUTPUT
+            echo "use_auto=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          generate_release_notes: true
+          tag_name: v${{ steps.final_version.outputs.version }}
+          name: v${{ steps.final_version.outputs.version }}
+          body: ${{ steps.release_notes.outputs.use_auto == 'true' && '' || steps.release_notes.outputs.notes }}
+          generate_release_notes: ${{ steps.release_notes.outputs.use_auto == 'true' }}
           files: "*.vsix"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
