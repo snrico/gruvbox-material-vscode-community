@@ -1,6 +1,43 @@
 # Change Log
 
-All notable changes to the "gruvbox-material" extension will be documented in this file.
+All notable changes to the "gruvbox-material-community" extension will be documented in this file.
+
+## 8.0.0
+
+🎉 **First Official Release of Gruvbox Material (Community)**
+
+This is the first release of the community-maintained fork, published under a new name to differentiate from the original deprecated extension.
+
+### 🚀 Highlights
+- **New publisher**: Now available as `snrico-moonlight.gruvbox-material-community`
+- **Published to both VS Code Marketplace and Open VSX**
+- **Fully modernized codebase** with all security vulnerabilities fixed
+
+### ⚠️ Breaking Changes
+- Extension renamed from `gruvbox-material` to `gruvbox-material-community`
+- If upgrading from the original extension, you'll need to install this as a new extension
+
+### 🔒 Security
+- Fixed all 26 security vulnerabilities from outdated dependencies
+
+### ✨ New Features
+- Visual regression testing with Playwright
+- Comprehensive unit test suite
+- Automated monthly upstream palette sync checks
+
+### 🛠️ Infrastructure
+- Updated Node.js from 16 to 20 (LTS)
+- Updated TypeScript from 4.9 to 5.9
+- Updated ESLint from 8 to 9 (with new flat config format)
+- Updated all GitHub Actions to v4
+- Updated all dependencies to latest versions
+- Added automated release workflow for VS Code Marketplace and Open VSX
+- Added Playwright browser caching in CI
+
+### 📝 Documentation
+- Updated README for community fork
+- Added MAINTENANCE.md with contribution guidelines
+- Updated CONTRIBUTING.md
 
 ## 6.6.0
 
