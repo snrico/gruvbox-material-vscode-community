@@ -2,6 +2,11 @@
 
 All notable changes to the "gruvbox-material-community" extension will be documented in this file.
 
+> Notes:
+> - `8.0.0` is the first public release of the community fork under the extension id `snrico-moonlight.gruvbox-material-community`.
+> - `7.0.0` and `6.6.0` were internal / pre-release milestones while the fork was being modernized and repackaged.
+> - `6.5.2` and earlier entries are preserved from the original upstream extension history for reference.
+
 ## 8.0.0
 
 🎉 **First Official Release of Gruvbox Material (Community)**
@@ -39,9 +44,18 @@ This is the first release of the community-maintained fork, published under a ne
 - Added MAINTENANCE.md with contribution guidelines
 - Updated CONTRIBUTING.md
 
-## 6.6.0
+## 7.0.0 (internal)
 
-This release marks the beginning of community maintenance after the original extension was deprecated.
+This was an internal/pre-release milestone used while decoupling from upstream's 6.x line.
+
+### Changed
+- Bumped major version to `7.0.0` to separate the fork from upstream versioning
+- Used the `snrico-moonlight` publisher while the extension was still named `gruvbox-material`
+- Kept for build/release history; users should install `8.0.0+`
+
+## 6.6.0 (internal)
+
+This was an internal milestone marking the beginning of community maintenance after the original extension was deprecated.
 
 ### Security
 - Fixed all 26 security vulnerabilities in dependencies
